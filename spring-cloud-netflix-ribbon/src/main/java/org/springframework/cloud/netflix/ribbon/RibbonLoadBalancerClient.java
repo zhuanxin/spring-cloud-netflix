@@ -48,6 +48,12 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 		this.clientFactory = clientFactory;
 	}
 
+	/**
+	 * 根据服务实例、请求uri获取真实URI
+	 * @param instance
+	 * @param original
+	 * @return
+	 */
 	@Override
 	public URI reconstructURI(ServiceInstance instance, URI original) {
 		Assert.notNull(instance, "instance can not be null");
@@ -113,7 +119,9 @@ public class RibbonLoadBalancerClient implements LoadBalancerClient {
 	 */
 	public <T> T execute(String serviceId, LoadBalancerRequest<T> request, Object hint)
 			throws IOException {
+		//获取Loadbalancer（获取服务列表）
 		ILoadBalancer loadBalancer = getLoadBalancer(serviceId);
+		//从服务列表中获取服务(负载均衡算法)
 		Server server = getServer(loadBalancer, hint);
 		if (server == null) {
 			throw new IllegalStateException("No instances available for " + serviceId);

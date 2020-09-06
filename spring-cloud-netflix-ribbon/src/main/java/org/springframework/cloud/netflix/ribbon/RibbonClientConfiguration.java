@@ -144,6 +144,16 @@ public class RibbonClientConfiguration {
 		return new PollingServerListUpdater(config);
 	}
 
+	/**
+	 * RibbonLoadBalancer
+	 * @param config
+	 * @param serverList
+	 * @param serverListFilter
+	 * @param rule
+	 * @param ping
+	 * @param serverListUpdater
+	 * @return
+	 */
 	@Bean
 	@ConditionalOnMissingBean
 	public ILoadBalancer ribbonLoadBalancer(IClientConfig config,
@@ -152,6 +162,7 @@ public class RibbonClientConfiguration {
 		if (this.propertiesFactory.isSet(ILoadBalancer.class, name)) {
 			return this.propertiesFactory.get(ILoadBalancer.class, config, name);
 		}
+		//默认loadBalancer
 		return new ZoneAwareLoadBalancer<>(config, rule, ping, serverList,
 				serverListFilter, serverListUpdater);
 	}
